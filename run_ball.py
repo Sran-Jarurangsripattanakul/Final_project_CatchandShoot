@@ -32,8 +32,7 @@ class Level1(Level):
         target.x = random.randint(-self.game.canvas_width //
                                   2, self.game.canvas_width // 2)
         target.y = random.randint(0, self.game.canvas_height // 2)
-        print(f"Level 1 target configured: size={
-              target.size}, x={target.x}, y={target.y}")
+        print(f"Level 1 target configured: size={target.size}, x={target.x}, y={target.y}")
 
     def update(self, dt):
         super().update(dt)
@@ -205,8 +204,7 @@ class CatchAndShootGame:
         # Position for score
         turtle.goto(-self.canvas_width + 45, self.canvas_height - 30)
         turtle.color("black")
-        turtle.write(f"Lives: {self.lives}  Score: {
-                     self.level_score}", font=("Arial", 16, "bold"))
+        turtle.write(f"Lives: {self.lives}  Score: {self.level_score}", font=("Arial", 16, "bold"))
 
         # Display time remaining for the current level
         turtle.goto(-self.canvas_width + 45,
@@ -219,8 +217,7 @@ class CatchAndShootGame:
         if self.level_timer > 30:
             # Position for bonus
             turtle.goto(-self.canvas_width + 45, self.canvas_height - 90)
-            turtle.write(f"Bonus Time: {
-                         int(self.level_timer - 30)}s", font=("Arial", 16, "bold"))
+            turtle.write(f"Bonus Time: {int(self.level_timer - 30)}s", font=("Arial", 16, "bold"))
 
         turtle.update()
 
@@ -256,8 +253,7 @@ class CatchAndShootGame:
 
         self.current_level.configure_target(self.target)
         print(f"Transitioned to {type(self.current_level).__name__}.")
-        print(f"Target size: {self.target.size}, Next threshold: {
-              self.level_score_threshold}")
+        print(f"Target size: {self.target.size}, Next threshold: {self.level_score_threshold}")
 
         self.level_timer = remaining_time + 30
 
@@ -314,8 +310,7 @@ class CatchAndShootGame:
                     # Ensure the new velocity is not the same as the previous one
                     if (self.target.vx, self.target.vy) != (previous_vx, previous_vy):
                         break
-                print(f"New target velocity: vx={
-                      self.target.vx}, vy={self.target.vy}")
+                print(f"New target velocity: vx={self.target.vx}, vy={self.target.vy}")
             else:  # For Level 1, ensure the target is stationary
                 self.target.vx = 0
                 self.target.vy = 0
@@ -329,8 +324,7 @@ class CatchAndShootGame:
 
             # Check for level score threshold
             if self.level_score >= self.level_score_threshold:
-                print(f"Level score reached {
-                      self.level_score}, moving to the next level!")
+                print(f"Level score reached {self.level_score}, moving to the next level!")
                 self.next_level()
 
     def _paddle_collision(self):
