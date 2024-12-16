@@ -2,7 +2,7 @@ import ball
 import paddle
 import turtle
 import random
-
+import time
 
 class Level:
     def __init__(self, game):
@@ -108,7 +108,7 @@ class Obstacle:
 class CatchAndShootGame:
     def __init__(self):
         self.screen = turtle.Screen()
-        self.HZ = 60
+        self.HZ = 120
         self.lives = 3
         self.score = 0
         self.shooter_ready = True
@@ -363,26 +363,29 @@ class CatchAndShootGame:
         if self.target.y - self.target.size <= -window_height or self.target.y + self.target.size >= window_height:
             self.target.vy = -self.target.vy
 
-    def _check_obstacle_collision(self):
+    def _check_obstacle_collision(self, dt):
         for obstacle in self.obstacles:
-            obstacle.move(1.0 / self.HZ)
-            # Check for collision with the shooter
-            if obstacle.check_collision(self.shooter):
-                # Reverse shooter's direction if it hits an obstacle
+            # Move the obstacle
+            obstacle.move(dt)
+
+            # Calculate the next position of the ball
+            next_x = self.shooter.x + self.shooter.vx * dt
+            next_y = self.shooter.y + self.shooter.vy * dt
+
+            # Check for collision between the ball's next position and the obstacle
+            if (
+                    abs(next_x - obstacle.x) <= (self.shooter.size + obstacle.width / 2) and
+                    abs(next_y - obstacle.y) <= (self.shooter.size + obstacle.height / 2)
+            ):
+                # Reverse the shooter's direction on collision
                 self.shooter.vx = -self.shooter.vx
                 self.shooter.vy = -self.shooter.vy
-
-            # Check for collision with the target
-            if obstacle.check_collision(self.target):
-                # Reverse target's direction if it hits an obstacle
-                self.target.vx = -self.target.vx
-                self.target.vy = -self.target.vy
+                break  # Exit after handling one collision
 
             # Handle obstacle bouncing off walls
             if obstacle.x - obstacle.width / 2 <= -self.canvas_width or obstacle.x + obstacle.width / 2 >= self.canvas_width:
                 obstacle.vx = -obstacle.vx
 
-            # Handle obstacle bouncing off the top or bottom wall
             if obstacle.y - obstacle.height / 2 <= -self.canvas_height or obstacle.y + obstacle.height / 2 >= self.canvas_height:
                 obstacle.vy = -obstacle.vy
 
@@ -428,25 +431,32 @@ class CatchAndShootGame:
         self.screen.onkey(self.move_right, "Right")
         self.screen.onkey(self.shoot, "space")
 
+        last_time = time.time()  # Track the last update time
+
         try:
             while True:
+                # Calculate the time delta since the last frame
+                current_time = time.time()
+                dt = current_time - last_time
+                last_time = current_time
+
+                # Update game logic with calculated `dt`
                 self._check_collision()  # Check ball collisions with other objects
                 self._check_wall_collision()  # Check ball-wall collisions
-                self._check_obstacle_collision()  # Check for ball-obstacle collisions
+                self._check_obstacle_collision(dt)  # Check for ball-obstacle collisions
+                self._update_timer(dt)  # Update level timer based on real elapsed time
+                self.current_level.update(dt=dt)  # Update current level logic with `dt`
 
-                # Loop through all obstacles to check if the ball hits them
-                for obstacle in self.obstacles:
-                    # Corrected here
-                    if self.shooter.check_collision_with_obstacle(obstacle):
-                        print("Ball collided with obstacle!")
-
-                self._update_timer(1.0 / self.HZ)
-                self.current_level.update(dt=1.0 / self.HZ)
+                # Redraw the game state
                 turtle.update()
+
+                # Check for game over
                 self.check_game_over()
+
+                # Limit frame rate (optional, adjust as needed)
+                time.sleep(max(0, (1.0 / self.HZ) - (time.time() - current_time)))
         except turtle.Terminator:
             pass
-
 
 # Run the game
 game = CatchAndShootGame()
