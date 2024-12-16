@@ -1,6 +1,7 @@
 import turtle
 import math
 
+
 class Ball:
     def __init__(self, size, x, y, vx, vy, color, ball_type=None, check_miss_callback=None):
         self.size = size
@@ -14,8 +15,7 @@ class Ball:
         self.count = 0
         self.canvas_width = turtle.screensize()[0]
         self.canvas_height = turtle.screensize()[1]
-        self.check_miss_callback = check_miss_callback  # Store the callback
-
+        self.check_miss_callback = check_miss_callback
 
     def draw(self):
         # draw a circle of radius equals to size centered at (x, y) and paint it with color
@@ -37,15 +37,16 @@ class Ball:
         self.count += 1
 
     def bounce_off(self, that):
-        dx  = that.x - self.x
-        dy  = that.y - self.y
+        dx = that.x - self.x
+        dy = that.y - self.y
         dvx = that.vx - self.vx
         dvy = that.vy - self.vy
-        dvdr = dx*dvx + dy*dvy; # dv dot dr
+        dvdr = dx*dvx + dy*dvy  # dv dot dr
         dist = self.size + that.size   # distance between particle centers at collison
 
         # magnitude of normal force
-        magnitude = 2 * self.mass * that.mass * dvdr / ((self.mass + that.mass) * dist)
+        magnitude = 2 * self.mass * that.mass * \
+            dvdr / ((self.mass + that.mass) * dist)
 
         # normal force, and in x and y directions
         fx = magnitude * dx / dist
@@ -56,7 +57,7 @@ class Ball:
         self.vy += fy / self.mass
         that.vx -= fx / that.mass
         that.vy -= fy / that.mass
-        
+
         # update collision counts
         self.count += 1
         that.count += 1
@@ -94,8 +95,8 @@ class Ball:
     def time_to_hit(self, that):
         if self is that:
             return math.inf
-        dx  = that.x - self.x
-        dy  = that.y - self.y
+        dx = that.x - self.x
+        dy = that.y - self.y
         dvx = that.vx - self.vx
         dvy = that.vy - self.vy
         dvdr = dx*dvx + dy*dvy
@@ -108,7 +109,7 @@ class Ball:
         sigma = self.size + that.size
         d = (dvdr*dvdr) - dvdv * (drdr - sigma*sigma)
         # if drdr < sigma*sigma:
-            # print("overlapping particles")
+        # print("overlapping particles")
         if d < 0:
             return math.inf
         t = -(dvdr + math.sqrt(d)) / dvdv
@@ -143,7 +144,8 @@ class Ball:
             return float('inf')
 
         # Calculate time for vertical alignment with the paddle
-        dt = (paddle.location[1] - self.y - self.size - paddle.height / 2) / abs(self.vy)
+        dt = (paddle.location[1] - self.y - self.size -
+              paddle.height / 2) / abs(self.vy)
 
         # Check if the ball's horizontal position will be within the paddle's width
         paddle_left_edge = paddle.location[0] - paddle.width / 2
@@ -162,7 +164,7 @@ class Ball:
     def bounce_off_wall(self):
         self.vy = -self.vy
         self.count += 1
-    
+
     def update_canvas_dimensions(self):
         screen = turtle.Screen()
         self.canvas_width = screen.window_width() // 2
@@ -192,8 +194,5 @@ class Ball:
 
         return False  # No collision
 
-
     def __str__(self):
         return str(self.x) + ":" + str(self.y) + ":" + str(self.vx) + ":" + str(self.vy) + ":" + str(self.count) + str(self.id)
-
-

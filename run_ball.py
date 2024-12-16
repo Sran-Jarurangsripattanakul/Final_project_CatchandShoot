@@ -3,6 +3,7 @@ import paddle
 import turtle
 import random
 
+
 class Level:
     def __init__(self, game):
         self.game = game
@@ -24,15 +25,19 @@ class Level:
             if self.game.shooter.check_collision_with_obstacle(obstacle):
                 print("Ball collided with obstacle!")
 
+
 class Level1(Level):
     def configure_target(self, target):
         target.size = 0.05 * self.game.canvas_width  # Set a default size for the target
-        target.x = random.randint(-self.game.canvas_width // 2, self.game.canvas_width // 2)
+        target.x = random.randint(-self.game.canvas_width //
+                                  2, self.game.canvas_width // 2)
         target.y = random.randint(0, self.game.canvas_height // 2)
-        print(f"Level 1 target configured: size={target.size}, x={target.x}, y={target.y}")
+        print(f"Level 1 target configured: size={
+              target.size}, x={target.x}, y={target.y}")
 
     def update(self, dt):
         super().update(dt)
+
 
 class Level2(Level):
     def configure_target(self, target):
@@ -40,19 +45,22 @@ class Level2(Level):
         target.vx = random.uniform(-50, 50)
         target.vy = random.uniform(-50, 50)
         target.size = 0.025 * self.game.canvas_width
-        target.x = random.randint(-self.game.canvas_width // 2, self.game.canvas_width // 2)
+        target.x = random.randint(-self.game.canvas_width //
+                                  2, self.game.canvas_width // 2)
         target.y = random.randint(0, self.game.canvas_height // 2)
         print(f"Target size set to: {target.size}")
 
     def update(self, dt):
         super().update(dt)
 
+
 class Level3(Level):
     def configure_target(self, target):
         target.vx = random.uniform(-100, 100)
         target.vy = random.uniform(-100, 100)
         target.size = 0.015 * self.game.canvas_width
-        target.x = random.randint(-self.game.canvas_width // 2, self.game.canvas_width // 2)
+        target.x = random.randint(-self.game.canvas_width //
+                                  2, self.game.canvas_width // 2)
         target.y = random.randint(0, self.game.canvas_height // 2)
 
     def update(self, dt):
@@ -60,6 +68,7 @@ class Level3(Level):
             self.game.target.vx = random.uniform(-50, 50)
             self.game.target.vy = random.uniform(-50, 50)
         super().update(dt)
+
 
 class Obstacle:
     def __init__(self, width, height, x, y, vx, vy, color):
@@ -77,7 +86,8 @@ class Obstacle:
 
     def draw(self):
         turtle.penup()
-        turtle.goto(self.x - self.width / 2, self.y - self.height / 2)  # Bottom-left corner
+        turtle.goto(self.x - self.width / 2, self.y -
+                    self.height / 2)  # Bottom-left corner
         turtle.pendown()
         turtle.color(self.color)
         turtle.begin_fill()
@@ -94,6 +104,7 @@ class Obstacle:
             abs(ball.x - self.x) <= (self.width / 2 + ball.size) and
             abs(ball.y - self.y) <= (self.height / 2 + ball.size)
         )
+
 
 class CatchAndShootGame:
     def __init__(self):
@@ -133,13 +144,15 @@ class CatchAndShootGame:
             for _ in range(3):  # Add three obstacles
                 width = 50
                 height = 20
-                x = random.randint(-self.canvas_width // 2 + width, self.canvas_width // 2 - width)
-                y = random.randint(-self.canvas_height // 2 + height, self.canvas_height // 2 - height)
+                x = random.randint(-self.canvas_width // 2 +
+                                   width, self.canvas_width // 2 - width)
+                y = random.randint(-self.canvas_height // 2 +
+                                   height, self.canvas_height // 2 - height)
                 vx = random.choice([-50, 50])
                 vy = random.choice([-30, 30])
                 color = (0, 0, 255)
-                self.obstacles.append(Obstacle(width, height, x, y, vx, vy, color))
-
+                self.obstacles.append(
+                    Obstacle(width, height, x, y, vx, vy, color))
 
     def initialize_paddle(self):
         tom = turtle.Turtle()
@@ -148,8 +161,10 @@ class CatchAndShootGame:
 
     def initialize_balls(self):
         ball_radius = 0.025 * self.canvas_width
-        self.shooter = ball.Ball(ball_radius, self.my_paddle.location[0], self.my_paddle.location[1] + self.my_paddle.height, 0, 0, (255, 0, 0), ball_type="shooter")
-        self.target = ball.Ball(ball_radius, 0, 0, 0, 0, (0, 255, 0), ball_type="target")
+        self.shooter = ball.Ball(
+            ball_radius, self.my_paddle.location[0], self.my_paddle.location[1] + self.my_paddle.height, 0, 0, (255, 0, 0), ball_type="shooter")
+        self.target = ball.Ball(ball_radius, 0, 0, 0, 0,
+                                (0, 255, 0), ball_type="target")
 
         # Ensure shooter is ready at game start
         self.shooter_ready = True
@@ -187,19 +202,25 @@ class CatchAndShootGame:
 
         # Display lives and score
         turtle.penup()
-        turtle.goto(-self.canvas_width + 45, self.canvas_height - 30)  # Position for score
+        # Position for score
+        turtle.goto(-self.canvas_width + 45, self.canvas_height - 30)
         turtle.color("black")
-        turtle.write(f"Lives: {self.lives}  Score: {self.level_score}", font=("Arial", 16, "bold"))
+        turtle.write(f"Lives: {self.lives}  Score: {
+                     self.level_score}", font=("Arial", 16, "bold"))
 
         # Display time remaining for the current level
-        turtle.goto(-self.canvas_width + 45, self.canvas_height - 60)  # Position for time
+        turtle.goto(-self.canvas_width + 45,
+                    self.canvas_height - 60)  # Position for time
         turtle.color("black")
-        turtle.write(f"Time: {int(self.level_timer)}s", font=("Arial", 16, "bold"))
+        turtle.write(f"Time: {int(self.level_timer)}s",
+                     font=("Arial", 16, "bold"))
 
         # Display bonus time if level_timer > 30
         if self.level_timer > 30:
-            turtle.goto(-self.canvas_width + 45, self.canvas_height - 90)  # Position for bonus
-            turtle.write(f"Bonus Time: {int(self.level_timer - 30)}s", font=("Arial", 16, "bold"))
+            # Position for bonus
+            turtle.goto(-self.canvas_width + 45, self.canvas_height - 90)
+            turtle.write(f"Bonus Time: {
+                         int(self.level_timer - 30)}s", font=("Arial", 16, "bold"))
 
         turtle.update()
 
@@ -235,7 +256,8 @@ class CatchAndShootGame:
 
         self.current_level.configure_target(self.target)
         print(f"Transitioned to {type(self.current_level).__name__}.")
-        print(f"Target size: {self.target.size}, Next threshold: {self.level_score_threshold}")
+        print(f"Target size: {self.target.size}, Next threshold: {
+              self.level_score_threshold}")
 
         self.level_timer = remaining_time + 30
 
@@ -261,7 +283,8 @@ class CatchAndShootGame:
                 # Reset the shooter (ball) to the paddle position
                 self.shooter_ready = True
                 self.shooter.x = self.my_paddle.location[0]
-                self.shooter.y = self.my_paddle.location[1] + self.my_paddle.height
+                self.shooter.y = self.my_paddle.location[1] + \
+                    self.my_paddle.height
                 self.shooter.vx = 0
                 self.shooter.vy = 0
 
@@ -270,7 +293,8 @@ class CatchAndShootGame:
             self.level_score += 1  # Increase level score, not the global score
 
             # Respawn the target at a random position
-            self.target.x = random.randint(-self.canvas_width // 2, self.canvas_width // 2)
+            self.target.x = random.randint(-self.canvas_width //
+                                           2, self.canvas_width // 2)
             self.target.y = random.randint(0, self.canvas_height // 2)
 
             # Update target velocity only for Level 2 and Level 3
@@ -290,7 +314,8 @@ class CatchAndShootGame:
                     # Ensure the new velocity is not the same as the previous one
                     if (self.target.vx, self.target.vy) != (previous_vx, previous_vy):
                         break
-                print(f"New target velocity: vx={self.target.vx}, vy={self.target.vy}")
+                print(f"New target velocity: vx={
+                      self.target.vx}, vy={self.target.vy}")
             else:  # For Level 1, ensure the target is stationary
                 self.target.vx = 0
                 self.target.vy = 0
@@ -304,13 +329,15 @@ class CatchAndShootGame:
 
             # Check for level score threshold
             if self.level_score >= self.level_score_threshold:
-                print(f"Level score reached {self.level_score}, moving to the next level!")
+                print(f"Level score reached {
+                      self.level_score}, moving to the next level!")
                 self.next_level()
 
     def _paddle_collision(self):
         if (
             not self.shooter_ready and
-            self.my_paddle.location[1] <= self.shooter.y <= self.my_paddle.location[1] + self.my_paddle.height
+            self.my_paddle.location[1] <= self.shooter.y <= self.my_paddle.location[1] +
+                self.my_paddle.height
             and abs(self.shooter.x - self.my_paddle.location[0]) <= self.my_paddle.width / 2
         ):
             self.shooter_ready = True
@@ -367,17 +394,21 @@ class CatchAndShootGame:
 
     def move_left(self):
         if (self.my_paddle.location[0] - self.my_paddle.width / 2 - 20) >= -self.canvas_width:
-            self.my_paddle.set_location([self.my_paddle.location[0] - 20, self.my_paddle.location[1]])
+            self.my_paddle.set_location(
+                [self.my_paddle.location[0] - 20, self.my_paddle.location[1]])
             if self.shooter_ready:
                 self.shooter.x = self.my_paddle.location[0]
-                self.shooter.y = self.my_paddle.location[1] + self.my_paddle.height
+                self.shooter.y = self.my_paddle.location[1] + \
+                    self.my_paddle.height
 
     def move_right(self):
         if (self.my_paddle.location[0] + self.my_paddle.width / 2 + 20) <= self.canvas_width:
-            self.my_paddle.set_location([self.my_paddle.location[0] + 20, self.my_paddle.location[1]])
+            self.my_paddle.set_location(
+                [self.my_paddle.location[0] + 20, self.my_paddle.location[1]])
             if self.shooter_ready:
                 self.shooter.x = self.my_paddle.location[0]
-                self.shooter.y = self.my_paddle.location[1] + self.my_paddle.height
+                self.shooter.y = self.my_paddle.location[1] + \
+                    self.my_paddle.height
 
     def check_game_over(self):
         if self.lives <= 0:
@@ -391,7 +422,7 @@ class CatchAndShootGame:
 
             # Position the ball slightly above the paddle before shooting
             self.shooter.y = self.my_paddle.location[
-                                 1] + self.my_paddle.height + self.shooter.size  # Position it above the paddle
+                1] + self.my_paddle.height + self.shooter.size  # Position it above the paddle
 
             # Set the velocity to move the ball upwards
             self.shooter.vy = 500
@@ -411,7 +442,8 @@ class CatchAndShootGame:
 
                 # Loop through all obstacles to check if the ball hits them
                 for obstacle in self.obstacles:
-                    if self.shooter.check_collision_with_obstacle(obstacle):  # Corrected here
+                    # Corrected here
+                    if self.shooter.check_collision_with_obstacle(obstacle):
                         print("Ball collided with obstacle!")
 
                 self._update_timer(1.0 / self.HZ)
@@ -420,7 +452,6 @@ class CatchAndShootGame:
                 self.check_game_over()
         except turtle.Terminator:
             pass
-
 
 
 # Run the game
