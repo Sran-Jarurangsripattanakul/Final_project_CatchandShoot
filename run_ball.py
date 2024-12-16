@@ -23,8 +23,6 @@ class Level:
         for obstacle in self.game.obstacles:
             if self.game.shooter.check_collision_with_obstacle(obstacle):
                 print("Ball collided with obstacle!")
-                # Additional logic can be added here (e.g., bounce effect, score increment)
-
 
 class Level1(Level):
     def configure_target(self, target):
@@ -34,7 +32,6 @@ class Level1(Level):
         print(f"Level 1 target configured: size={target.size}, x={target.x}, y={target.y}")
 
     def update(self, dt):
-        # Add any additional logic for Level2
         super().update(dt)
 
 class Level2(Level):
@@ -48,8 +45,8 @@ class Level2(Level):
         print(f"Target size set to: {target.size}")
 
     def update(self, dt):
-        # Add any additional logic for Level2
         super().update(dt)
+
 class Level3(Level):
     def configure_target(self, target):
         target.vx = random.uniform(-100, 100)
@@ -75,12 +72,10 @@ class Obstacle:
         self.color = color
 
     def move(self, dt):
-        # Update the position of the obstacle based on its velocity
         self.x += self.vx * dt
         self.y += self.vy * dt
 
     def draw(self):
-        # Draw the obstacle using turtle graphics
         turtle.penup()
         turtle.goto(self.x - self.width / 2, self.y - self.height / 2)  # Bottom-left corner
         turtle.pendown()
@@ -116,7 +111,7 @@ class CatchAndShootGame:
         self.canvas_height = self.screen.window_height()
 
         self.obstacles = []  # List of obstacles
-        self.initialize_obstacles()  # Initialize obstacles after defining canvas dimensions
+        self.initialize_obstacles()
 
         # Add a level timer
         self.level_timer = 30
@@ -140,9 +135,9 @@ class CatchAndShootGame:
                 height = 20
                 x = random.randint(-self.canvas_width // 2 + width, self.canvas_width // 2 - width)
                 y = random.randint(-self.canvas_height // 2 + height, self.canvas_height // 2 - height)
-                vx = random.choice([-50, 50])  # Random horizontal velocity
-                vy = random.choice([-30, 30])  # Add vertical velocity
-                color = (0, 0, 255)  # Blue
+                vx = random.choice([-50, 50])
+                vy = random.choice([-30, 30])
+                color = (0, 0, 255)
                 self.obstacles.append(Obstacle(width, height, x, y, vx, vy, color))
 
 
@@ -268,7 +263,7 @@ class CatchAndShootGame:
                 self.shooter.x = self.my_paddle.location[0]
                 self.shooter.y = self.my_paddle.location[1] + self.my_paddle.height
                 self.shooter.vx = 0
-                self.shooter.vy = 0  # Reset shooter velocity
+                self.shooter.vy = 0
 
     def _check_collision(self):
         if self.shooter.distance(self.target) <= self.shooter.size + self.target.size:
@@ -398,9 +393,9 @@ class CatchAndShootGame:
             self.shooter.y = self.my_paddle.location[
                                  1] + self.my_paddle.height + self.shooter.size  # Position it above the paddle
 
-            # Set the velocity to move the ball upwards (you may change this value to shoot it faster/slower)
-            self.shooter.vy = 500  # Vertical speed (you can adjust this value)
-            self.shooter.vx = 0  # Horizontal speed (keeping it 0 if you only want it to move upwards)
+            # Set the velocity to move the ball upwards
+            self.shooter.vy = 500
+            self.shooter.vx = 0
 
     def run(self):
         self.screen.listen()
